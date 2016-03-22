@@ -15,6 +15,7 @@ namespace QRCoder1
     {
 
         //hockey is for lame-o's
+        //QR codes save lives
         static void Main(string[] args)
         {
             //init string which will be encoding in QR
