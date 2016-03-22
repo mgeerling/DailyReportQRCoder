@@ -1,0 +1,9 @@
+c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\bin\Debug\QRCoder1.exe.config
+c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\bin\Debug\QRCoder1.exe
+c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\bin\Debug\QRCoder1.pdb
+c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\bin\Debug\QRCoder.dll
+c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\bin\Debug\UnityEngine.dll
+c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\bin\Debug\QRCoder.pdb
+c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\obj\Debug\QRCoder1.csprojResolveAssemblyReference.cache
+c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\obj\Debug\QRCoder1.exe
+c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\obj\Debug\QRCoder1.pdb
