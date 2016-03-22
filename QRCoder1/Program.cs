@@ -15,10 +15,21 @@ namespace QRCoder1
     {
         static void Main(string[] args)
         {
+            //init string which will be encoding in QR
             String installedProducts ="";
+
+            //get machine name
+            String machineName = Environment.MachineName;
+            //TODO: can also get OS Version + 64 bitness?  Need some logic and translation
+
+            //add machine name to final print out 
+            installedProducts = installedProducts + machineName;
+
+
             ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product");
             foreach (ManagementObject mo in mos.Get())
             {
+                //List of all objects inside of a Management Object: https://msdn.microsoft.com/en-us/library/aa394378(v=vs.85).aspx
                 String installDateString = (String)mo["InstallDate"];
                 DateTime installDate = DateTime.ParseExact(installDateString, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
 
