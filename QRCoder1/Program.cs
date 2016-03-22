@@ -13,6 +13,8 @@ namespace QRCoder1
 {
     class Program
     {
+
+        //hockey is for lame-o's
         static void Main(string[] args)
         {
             //init string which will be encoding in QR

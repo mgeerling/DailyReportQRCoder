@@ -7,3 +7,6 @@ c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\bin\D
 c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\obj\Debug\QRCoder1.csprojResolveAssemblyReference.cache
 c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\obj\Debug\QRCoder1.exe
 c:\users\mgeerling\documents\visual studio 2015\Projects\QRCoder1\QRCoder1\obj\Debug\QRCoder1.pdb
+C:\Users\jkorman\Documents\GitHub\DailyReportQRCoder\QRCoder1\bin\Debug\QRCoder1.exe.config
+C:\Users\jkorman\Documents\GitHub\DailyReportQRCoder\QRCoder1\obj\Debug\QRCoder1.exe
+C:\Users\jkorman\Documents\GitHub\DailyReportQRCoder\QRCoder1\obj\Debug\QRCoder1.pdb
