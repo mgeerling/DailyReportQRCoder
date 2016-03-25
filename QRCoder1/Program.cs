@@ -9,13 +9,42 @@ using System.IO;
 using System.Diagnostics;
 using System.Management;
 
+//TODO get bitness 
+//TODO create shortcut to file for 64bit folder? 
 //TODO prompt to add a run as admin?: https://social.msdn.microsoft.com/Forums/windows/en-US/db6647a3-85ca-4dc4-b661-fbbd36bd561f/run-as-administrator-c?forum=winforms
 
 namespace QRCoder1
 {
     class Program
     {
-        public static void writeDailyReport(String MachineName, String installedProducts)
+        public static String getInstalledProducts(DateTime startDate)
+        {
+            string installedProducts = "";
+
+            ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product"); // TODO add a where clause 
+            foreach (ManagementObject mo in mos.Get())
+            {
+                //List of all objects inside of a Management Object: https://msdn.microsoft.com/en-us/library/aa394378(v=vs.85).aspx
+                String installDateString = (String)mo["InstallDate"];
+                DateTime installDate = DateTime.ParseExact(installDateString, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+
+                //Compare date time against a time TODO CHANGE TO MIDNIGHT TODAY 
+                if (DateTime.Compare(installDate, startDate) >= 0)
+                { //if greater than 0, t1 is later than t2 -- if 0, then equal 
+                    String productName = (String)mo["Name"];
+                    String version = (String)mo["Version"];
+                    String company = (String)mo["Vendor"];
+
+                    //if the software vendor field contains OSIsoft, it's a PI Product -- therefore, print it 
+                    if (company.Contains("OSIsoft"))
+                    {
+                        installedProducts = installedProducts + productName + ", " + version + "\r\n";
+                    }
+                }
+            }
+            return installedProducts;
+        }
+        public static void writeWorkHistory(String MachineName, String installedProducts)
         {
             //Writing files: https://msdn.microsoft.com/en-us/library/d62kzs03(v=vs.110).aspx
             string pihome = Environment.GetEnvironmentVariable("pihome");
@@ -25,6 +54,7 @@ namespace QRCoder1
             System.IO.Directory.CreateDirectory(@pihome + @"\OSI_FSE");
 
             //Generate text to be written to file 
+
             //TODO create other variables to be used -- maybe as flags? 
             String header = MachineName + " Site Name " + "Node Type " + "\r\n" + DateTime.Now + " FSE Name \r\n";
             String content = installedProducts;
@@ -62,71 +92,79 @@ namespace QRCoder1
         }
         static void Main(string[] args)
         {
-            //init string which will be encoding in QR
+            //Init variables
+            Boolean runSummary = false;
             String installedProducts = "";
 
             //get machine name
             String machineName = Environment.MachineName;
-            //TODO: can also get OS Version + 64 bitness?  Need some logic and translation
 
-            //add machine name to final print out 
-            installedProducts = installedProducts + "Machine Name: " + machineName + "\r\n";
+            //getting operating system: http://stackoverflow.com/questions/577634/how-to-get-the-friendly-os-version-name
+            var operatingSystem = (from x in new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem").Get().OfType<ManagementObject>()
+                                   select x.GetPropertyValue("Caption")).FirstOrDefault();
+            string OS = operatingSystem.ToString();
+
+            //SAMPLE DATE TIME (FOR TESTING) //DateTime todayDate = new DateTime(2016, 3, 1, 0, 0, 0);
+            DateTime startDate = DateTime.Today;
 
 
-            ManagementObjectSearcher mos = new ManagementObjectSearcher("SELECT * FROM Win32_Product");
-            foreach (ManagementObject mo in mos.Get())
+            //Check to see if we will run the summary report
+            for (int i = 0; i < args.Length; i++)
             {
-                //List of all objects inside of a Management Object: https://msdn.microsoft.com/en-us/library/aa394378(v=vs.85).aspx
-                String installDateString = (String)mo["InstallDate"];
-                DateTime installDate = DateTime.ParseExact(installDateString, "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-
-                //SAMPLE DATE TIME (FOR TESTING) //DateTime todayDate = new DateTime(2016, 3, 1, 0, 0, 0);
-                DateTime todayDate = DateTime.Today;
-
-                //Compare date time against a time TODO CHANGE TO MIDNIGHT TODAY 
-                if (DateTime.Compare(installDate, todayDate) >= 0)
-                { //if greater than 0, t1 is later than t2 -- if 0, then equal 
-                    String productName = (String)mo["Name"];
-                    String version = (String)mo["Version"];
-                    String company = (String)mo["Vendor"];
-
-                    //if the software vendor field contains OSIsoft, it's a PI Product -- therefore, print it 
-                    if (company.Contains("OSIsoft"))
+                if (String.Compare(args[i].ToLower(), "summary") == 0)
+                {
+                    runSummary = true;
+                    try
                     {
-                        installedProducts = installedProducts + productName + ", " + version + "\r\n";
+                        String date = args[i + 1];
+                        startDate = Convert.ToDateTime(date);
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Wrong date dumbass");
                     }
                 }
             }
 
-            //TODO Run this situationally based on cmd line flags
-            writeDailyReport(machineName, installedProducts);
-
-            //try/catch to make sure the length of our string is shorter than max length of QR Code 
-            //https://en.wikipedia.org/wiki/QR_code
-            try
+            //if runSummary flag is set to false -- then we will generate the QR Code 
+            if (runSummary == false)
             {
-                //create QR Code as bitmap
+                //SAMPLE DATE TIME (FOR TESTING) //DateTime todayDate = new DateTime(2016, 3, 1, 0, 0, 0);
+                installedProducts = getInstalledProducts(DateTime.Today);
 
-                QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(installedProducts, QRCodeGenerator.ECCLevel.Q);
-                QRCode qrCode = new QRCode(qrCodeData);
-                Bitmap qrCodeImage = qrCode.GetGraphic(20);
+                //build content to be encoded 
+                String qrContent = machineName + " " + OS + "\r\n" + installedProducts;
 
-                //create a path based on the current running user 
-                String username = Environment.UserName;
-                String path = String.Format("C:\\Users\\{0}\\Desktop\\qrcode.bmp", username);
-                //save bitmap
-                qrCodeImage.Save(path);
-                //open bitmap
-                Process.Start(@path);
+                //try/catch to make sure the length of our string is shorter than max length of QR Code 
+                //https://en.wikipedia.org/wiki/QR_code
+                try
+                {
+                    //create QR Code as bitmap
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+                    Bitmap qrCodeImage = qrCode.GetGraphic(20);
+
+                    //create a path based on the current running user 
+                    String username = Environment.UserName;
+                    String path = String.Format("C:\\Users\\{0}\\Desktop\\qrcode.bmp", username);
+                    //save bitmap
+                    qrCodeImage.Save(path);
+                    //open bitmap
+                    Process.Start(@path);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                    Console.WriteLine("This error is due to the length of the QR Code -- please use the summary report option to gather text for report");
+                    Console.ReadLine();
+                }
             }
-            catch (Exception ex)
+            else //run summary report which will simply write the work-history.txt
             {
-                Console.WriteLine(ex.ToString());
-                Console.WriteLine("This error is due to the length of the QR Code -- please use the daily report option to gather text for report");
-                Console.ReadLine();
+                installedProducts = getInstalledProducts(startDate);  
+                writeWorkHistory(machineName, installedProducts);
             }
-
         }
     }
 

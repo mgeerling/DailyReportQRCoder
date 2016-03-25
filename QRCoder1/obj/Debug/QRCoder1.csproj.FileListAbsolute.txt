@@ -13,9 +13,9 @@ C:\Users\jkorman\Documents\GitHub\DailyReportQRCoder\QRCoder1\obj\Debug\QRCoder1
 C:\Users\mgeerling\Documents\Visual Studio 2015\Projects\DailyReportQRCoder\QRCoder1\bin\Debug\QRCoder.dll
 C:\Users\mgeerling\Documents\Visual Studio 2015\Projects\DailyReportQRCoder\QRCoder1\bin\Debug\UnityEngine.dll
 C:\Users\mgeerling\Documents\Visual Studio 2015\Projects\DailyReportQRCoder\QRCoder1\bin\Debug\QRCoder.pdb
-C:\Users\mgeerling\Documents\Visual Studio 2015\Projects\DailyReportQRCoder\QRCoder1\obj\Debug\QRCoder1.csprojResolveAssemblyReference.cache
 C:\Users\mgeerling\Documents\Visual Studio 2015\Projects\DailyReportQRCoder\QRCoder1\bin\Debug\FSDailyReportGenerator.exe.config
 C:\Users\mgeerling\Documents\Visual Studio 2015\Projects\DailyReportQRCoder\QRCoder1\bin\Debug\FSDailyReportGenerator.exe
 C:\Users\mgeerling\Documents\Visual Studio 2015\Projects\DailyReportQRCoder\QRCoder1\bin\Debug\FSDailyReportGenerator.pdb
 C:\Users\mgeerling\Documents\Visual Studio 2015\Projects\DailyReportQRCoder\QRCoder1\obj\Debug\FSDailyReportGenerator.exe
 C:\Users\mgeerling\Documents\Visual Studio 2015\Projects\DailyReportQRCoder\QRCoder1\obj\Debug\FSDailyReportGenerator.pdb
+C:\Users\mgeerling\Documents\Visual Studio 2015\Projects\DailyReportQRCoder\QRCoder1\obj\Debug\QRCoder1.csprojResolveAssemblyReference.cache
